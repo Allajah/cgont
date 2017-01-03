@@ -6,27 +6,37 @@ import (
 
 	"encoding/json"
 )
+
 type Invalidation struct {
-	Status string `json:"Status"`
-	CreateTime string `json:"CreateTime"`
-	Id string `json:"Id"`
+	Status     string
+	CreateTime string
+	Id         string
 }
 
 type InvalidationList struct {
-	Items []Invalidation `json:"Items"`
+	Items []Invalidation
 }
 
+type Res struct {
+	InvalidationList InvalidationList
+}
 
-func Run(distId string)  {
-	 out, err := exec.Command("aws", "cloudfront", "list-invalidations", "--distribution-id", distId).Output()
-	inv := new(InvalidationList)
+func Run(distId string) {
+	out, err := exec.Command("aws", "cloudfront", "list-invalidations", "--distribution-id", distId).Output()
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(string(out))
-	err = json.Unmarshal(out, inv)
+	res := new(Res)
+	 err = json.Unmarshal(out, res)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(inv)
+	items := res.InvalidationList.Items
+
+	for _, item := range items {
+		fmt.Printf("CreatedTime    : %s \n",item.CreateTime)
+		fmt.Printf("Invalidation ID: %s \n",item.Id)
+		fmt.Printf("Status         : %s \n",item.Status)
+		fmt.Printf("-----------------------------------------\n")
+	}
 }
