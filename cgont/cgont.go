@@ -21,7 +21,7 @@ type Res struct {
 	InvalidationList InvalidationList
 }
 
-func Run(distId string) {
+func ListInvalidations(distId string) {
 	out, err := exec.Command("aws", "cloudfront", "list-invalidations", "--distribution-id", distId).Output()
 	if err != nil {
 		fmt.Println(err)
