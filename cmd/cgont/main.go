@@ -1,17 +1,25 @@
 package main
 
 import (
-	 "github.com/Allajah/cgont/cgont"
+	//"github.com/Allajah/cgont/cgont"
 	"flag"
+	"os"
+	"github.com/Allajah/cgont/cgont"
 )
 
 func main() {
-	 var (
-		distIdFlag string
-	)
 
-	flag.StringVar(&distIdFlag, "dist-id", "", "CloudFront Distribution ID")
-	flag.Parse()
+	listCommand := flag.NewFlagSet("list", flag.ExitOnError)
 
-	cgont.Run(distIdFlag)
+	distId := listCommand.String("dist-id", "DISTRIBUTIONID", "CloudFront Distribution ID")
+
+	switch os.Args[1] {
+	case "list":
+		listCommand.Parse(os.Args[2:])
+		cgont.ListInvalidations(*distId)
+	default:
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
 }
