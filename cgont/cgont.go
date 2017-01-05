@@ -17,7 +17,7 @@ type InvalidationList struct {
 	Items []Invalidation
 }
 
-type Res struct {
+type Response struct {
 	InvalidationList InvalidationList
 }
 
@@ -26,17 +26,18 @@ func ListInvalidations(distId string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	res := new(Res)
-	 err = json.Unmarshal(out, res)
+	res := new(Response)
+	err = json.Unmarshal(out, res)
 	if err != nil {
 		fmt.Println(err)
 	}
 	items := res.InvalidationList.Items
 
 	for _, item := range items {
-		fmt.Printf("CreatedTime    : %s \n",item.CreateTime)
-		fmt.Printf("Invalidation ID: %s \n",item.Id)
-		fmt.Printf("Status         : %s \n",item.Status)
+		fmt.Printf("CreatedTime    : %s \n", item.CreateTime)
+		fmt.Printf("Invalidation ID: %s \n", item.Id)
+		fmt.Printf("Status         : %s \n", item.Status)
 		fmt.Printf("-----------------------------------------\n")
 	}
 }
+
