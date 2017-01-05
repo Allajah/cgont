@@ -41,3 +41,7 @@ func ListInvalidations(distId string) {
 	}
 }
 
+func WatchInvalidation(distId, watchId string) {
+	fmt.Println(distId, "distId")
+	fmt.Println(watchId, "watchId")
+}

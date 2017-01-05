@@ -1,0 +1,5 @@
+package cgont
+
+func Help() {
+
+}
