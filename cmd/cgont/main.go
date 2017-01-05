@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"github.com/Allajah/cgont/cgont"
@@ -22,6 +23,11 @@ func main() {
 
 	switch os.Args[1] {
 	case "list":
+		if len(os.Args[2:]) < 1 {
+			msg := "This command needs Distribution ID.\nPlease specify Distribution ID with --dist-id option."
+			fmt.Println(msg)
+			os.Exit(1)
+		}
 		listCommand.Parse(os.Args[2:])
 		cgont.ListInvalidations(*listDistId)
 	case "watch":
