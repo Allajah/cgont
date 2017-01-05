@@ -3,10 +3,15 @@ package main
 import (
 	"flag"
 	"os"
+
 	"github.com/Allajah/cgont/cgont"
 )
 
 func main() {
+	if len(os.Args) < 2 || os.Args[1] == "-h" || os.Args[1] == "--help" {
+		cgont.Help()
+		os.Exit(1)
+	}
 
 	listCommand := flag.NewFlagSet("list", flag.ExitOnError)
 	listDistId := listCommand.String("dist-id", "DISTRIBUTIONID", "CloudFront Distribution ID")
@@ -23,7 +28,7 @@ func main() {
 		watchCommand.Parse(os.Args[2:])
 		cgont.WatchInvalidation(*watchDistId, *watchInvalidationId)
 	default:
-		flag.PrintDefaults()
+		cgont.Help()
 		os.Exit(1)
 	}
 
