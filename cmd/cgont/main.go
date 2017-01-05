@@ -15,7 +15,7 @@ func main() {
 	}
 
 	listCommand := flag.NewFlagSet("list", flag.ExitOnError)
-	listDistId := listCommand.String("dist-id", "DISTRIBUTIONID", "CloudFront Distribution ID")
+	listDistId := listCommand.String("dist-id", "", "CloudFront Distribution ID")
 
 	watchCommand := flag.NewFlagSet("watch", flag.ContinueOnError)
 	watchDistId := watchCommand.String("dist-id", "DISTRIBUTIONID", "CloudFront Distribution ID")
@@ -23,12 +23,12 @@ func main() {
 
 	switch os.Args[1] {
 	case "list":
-		if len(os.Args[2:]) < 1 {
+		listCommand.Parse(os.Args[2:])
+		if *listDistId == "" {
 			msg := "This command needs Distribution ID.\nPlease specify Distribution ID with --dist-id option."
 			fmt.Println(msg)
 			os.Exit(1)
 		}
-		listCommand.Parse(os.Args[2:])
 		cgont.ListInvalidations(*listDistId)
 	case "watch":
 		watchCommand.Parse(os.Args[2:])
