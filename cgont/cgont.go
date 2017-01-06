@@ -42,6 +42,6 @@ func ListInvalidations(distId string) {
 }
 
 func WatchInvalidation(distId, watchId string) {
-	fmt.Println(distId, "distId")
-	fmt.Println(watchId, "watchId")
+	out, err := exec, Command("aws", "cloudfront", "get-invalidation", "--distribution-id", distId, "--id", watchId)
+	fmt.Println(out)
 }
