@@ -21,6 +21,10 @@ type Response struct {
 	InvalidationList InvalidationList
 }
 
+type WatchResponse struct {
+	Invalidation Invalidation
+}
+
 func ListInvalidations(distId string) {
 	out, err := exec.Command("aws", "cloudfront", "list-invalidations", "--distribution-id", distId).Output()
 	if err != nil {
@@ -42,6 +46,23 @@ func ListInvalidations(distId string) {
 }
 
 func WatchInvalidation(distId, watchId string) {
-	out, err := exec, Command("aws", "cloudfront", "get-invalidation", "--distribution-id", distId, "--id", watchId)
-	fmt.Println(out)
+	inv, err := getInvalidation(distId, watchId)
+	if err != nil {
+		panic(err)
+	}
+	res := new(WatchResponse)
+	err = json.Unmarshal(inv, res)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(res.Invalidation)
+
+}
+
+func getInvalidation(distId, watchId string) ([]byte, error) {
+	out, err := exec.Command("aws", "cloudfront", "get-invalidation", "--distribution-id", distId, "--id", watchId).Output()
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
