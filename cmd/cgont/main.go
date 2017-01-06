@@ -18,7 +18,7 @@ func main() {
 	listDistId := listCommand.String("dist-id", "", "CloudFront Distribution ID")
 
 	watchCommand := flag.NewFlagSet("watch", flag.ContinueOnError)
-	watchDistId := watchCommand.String("dist-id", "DISTRIBUTIONID", "CloudFront Distribution ID")
+	watchDistId := watchCommand.String("dist-id", "", "CloudFront Distribution ID")
 	watchInvalidationId := watchCommand.String("invalidation-id", "INVALIDATIONID", "CloudFront Invalidation ID")
 
 	switch os.Args[1] {
