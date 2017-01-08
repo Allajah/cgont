@@ -2,7 +2,9 @@ package cgont
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
+	"time"
 
 	"encoding/json"
 )
@@ -46,23 +48,34 @@ func ListInvalidations(distId string) {
 }
 
 func WatchInvalidation(distId, watchId string) {
-	inv, err := getInvalidation(distId, watchId)
-	if err != nil {
-		panic(err)
+	status := getInvalidationStatus(distId, watchId)
+	if status == "Completed" {
+		fmt.Printf("Invalidation ID: %s is alread completed", watchId)
+		os.Exit(0)
 	}
-	res := new(WatchResponse)
-	err = json.Unmarshal(inv, res)
-	if err != nil {
-		panic(err)
+	fmt.Println("Watching invalidation...")
+	for {
+		status = getInvalidationStatus(distId, watchId)
+		if status == "Completed" {
+			fmt.Printf("Invalidation ID: %s is completed!", watchId)
+			os.Exit(0)
+		}
+		time.Sleep(30 * time.Second)
 	}
-	fmt.Println(res.Invalidation)
 
 }
 
-func getInvalidation(distId, watchId string) ([]byte, error) {
+func getInvalidationStatus(distId, watchId string) string {
 	out, err := exec.Command("aws", "cloudfront", "get-invalidation", "--distribution-id", distId, "--id", watchId).Output()
 	if err != nil {
-		return nil, err
+		fmt.Println("Getting invalidation error is occured. Make sure your distribution and invalidation is existing")
+		os.Exit(1)
 	}
-	return out, nil
+	res := new(WatchResponse)
+	err = json.Unmarshal(out, res)
+	if err != nil {
+		panic(err)
+	}
+
+	return res.Invalidation.Status
 }
